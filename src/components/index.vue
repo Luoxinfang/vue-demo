@@ -41,9 +41,8 @@
     <div class="title"></div>
     <a class="btn-drinking" @click="goDrinking"></a>
     <div class="rule" v-show="showRule">
-      <router-link class="btn-close" to="/reg"></router-link>
+      <a class="btn-close" @click="goReg"></a>
     </div>
-    <router-view class="view"></router-view>
   </div>
 </template>
 <script>
@@ -56,8 +55,12 @@
     },
     methods: {
       goDrinking: function () {
-        this.showRule = true;
-        Core.showMasker();
+        this.showRule = true
+        Core.showMasker()
+      },
+      goReg: function () {
+        Core.hideMasker()
+        this.$router.push({ path: 'reg' })
       }
     }
   }
