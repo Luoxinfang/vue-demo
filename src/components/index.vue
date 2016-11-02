@@ -41,7 +41,7 @@
     <div class="title"></div>
     <a class="btn-drinking" @click="goDrinking"></a>
     <div class="rule" v-show="showRule">
-      <a class="btn-close" @click="goReg"></a>
+      <a class="btn-close" @click.stop="goReg"></a>
     </div>
   </div>
 </template>
@@ -60,7 +60,7 @@
       },
       goReg: function () {
         Core.hideMasker()
-        this.$router.push({ path: 'reg' })
+        this['$router'].push({ path: 'reg' })
       }
     }
   }

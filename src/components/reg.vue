@@ -41,20 +41,24 @@
   .mt-m {
     margin-top: 5%;
   }
-  .agree{
+
+  .agree {
     padding: .5rem 2%;
     height: 1.5rem;
   }
-  .agree .left{
+
+  .agree .left {
     width: 12%;
   }
-  .agree .right{
+
+  .agree .right {
     width: 88%;
     font-size: .36rem;
     line-height: .5rem;
     color: #59493f;
   }
-  .btn-agree{
+
+  .btn-agree {
     appearance: none;
     -webkit-appearance: none;
     width: .42rem;
@@ -62,14 +66,25 @@
     background-color: #f9f9f9;
     outline: none;
   }
-  .btn-agree:checked{
-    background: url(../assets/icon/btn-2.png) no-repeat ;
+
+  .btn-agree:checked {
+    background: url(../assets/icon/btn-2.png) no-repeat;
     background-size: contain;
   }
-  .btn-wrapper{
+
+  .btn-wrapper {
     margin-top: .2rem;
   }
+
   .btn-next {
+    display: block;
+    width: 90%;
+    height: 1.2rem;
+    margin: 0 auto;
+    background: url(../assets/icon/btn-3.png) no-repeat;
+    background-size: contain;
+  }
+  .btn-disabled {
     display: block;
     width: 90%;
     height: 1.2rem;
@@ -83,27 +98,25 @@
     <div class="float-layer">
       <div class="form-group">
         <span class="label left">性别:</span>
-        <input class="ipt left font-hk" v-model="user.gender">
+        <input class="ipt left font-hk" v-model="gender" v-bind:readonly="true">
       </div>
       <div class="form-group mt-m">
         <span class="label left">身高:</span>
-        <input class="ipt left font-hk" v-model="user.height">
+        <input class="ipt left font-hk" type="number" v-model="user.height">
       </div>
       <div class="form-group mt-m">
         <span class="label left">体重:</span>
-        <input class="ipt left font-hk" v-model="user.weight">
+        <input class="ipt left font-hk" type="number" v-model="user.weight">
       </div>
       <div class="agree">
         <div class="left">
           <input class="btn-agree" type="checkbox" v-model="agreeRule">
         </div>
-        <div class="right">
-          本人已仔细阅读过《21天水动力》游戏规则，并同意使用以上信息建立个人角色。
-        </div>
+        <div class="right">本人已仔细阅读过《21天水动力》游戏规则，并同意使用以上信息建立个人角色。</div>
       </div>
-     <div class="btn-wrapper">
-       <a class="btn-next" to="photo"></a>
-     </div>
+      <div class="btn-wrapper">
+        <a v-bind:class="[filled?'btn-next':'btn-disabled']" @click.stop="goSetPhoto"></a>
+      </div>
     </div>
   </div>
 </template>
@@ -120,10 +133,32 @@
         agreeRule: false
       }
     },
+    computed: {
+      gender: function () {
+        return this['user'].gender ? '男' : '女'
+      },
+      filled: function () {
+        return this['user'].height && this['user'].weight
+      }
+    },
+    watch: {
+      agreeRule: function (agreeRule) {
+        this['$http'].post('/someUrl', {
+          agreeRule: agreeRule
+        }).then(function () {
+          console.log('ok')
+        }, function () {
+          console.log('error')
+        })
+      }
+    },
     methods: {
-      goDrinking: function () {
-        this.showRule = true;
-        Core.showMasker();
+      goSetPhoto: function () {
+        if(this['filled']){
+          this['$parent'].user = this['user']
+          this['$router'].push({ path: 'photo' })
+        }
+
       }
     }
   }
