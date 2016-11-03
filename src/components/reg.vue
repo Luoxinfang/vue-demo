@@ -89,8 +89,30 @@
     width: 90%;
     height: 1.2rem;
     margin: 0 auto;
-    background: url(../assets/icon/btn-3.png) no-repeat;
+    background: url(../assets/icon/btn-3-1.png) no-repeat;
     background-size: contain;
+  }
+  .underline{
+    text-decoration: underline;
+  }
+  .rule {
+    position: absolute;
+    z-index: 1000;
+    top: 15%;
+    left: 5%;
+    width: 90%;
+    height: 70%;
+    background: url(../assets/icon/rule.jpg) no-repeat 0 0;
+    background-size: 100%;
+  }
+
+  .btn-close {
+    position: absolute;
+    top: .1rem;
+    right: .1rem;
+    width: .6rem;
+    height: .6rem;
+    display: inline-block;
   }
 </style>
 <template>
@@ -112,11 +134,15 @@
         <div class="left">
           <input class="btn-agree" type="checkbox" v-model="agreeRule">
         </div>
-        <div class="right">本人已仔细阅读过《21天水动力》游戏规则，并同意使用以上信息建立个人角色。</div>
+        <div class="right">本人已仔细阅读过《21天水动力》
+          <a class="underline" @click.stop="openRule">游戏规则</a>，并同意使用以上信息建立个人角色。</div>
       </div>
       <div class="btn-wrapper">
         <a v-bind:class="[filled?'btn-next':'btn-disabled']" @click.stop="goSetPhoto"></a>
       </div>
+    </div>
+    <div class="rule" v-show="showRule">
+      <a class="btn-close" @click.stop="closeRule"></a>
     </div>
   </div>
 </template>
@@ -130,6 +156,7 @@
           height: '',
           weight: ''
         },
+        showRule: false,
         agreeRule: false
       }
     },
@@ -153,12 +180,19 @@
       }
     },
     methods: {
-      goSetPhoto: function () {
+      goSetPhoto() {
         if(this['filled']){
           this['$parent'].user = this['user']
           this['$router'].push({ path: 'photo' })
         }
-
+      },
+      openRule(){
+        this.showRule = true
+        Core.showMasker()
+      },
+      closeRule(){
+        this.showRule = false
+        Core.hideMasker()
       }
     }
   }

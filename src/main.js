@@ -1,3 +1,4 @@
+import './assets/css/swiper-3.4.0.min.css'
 import './assets/css/style.css'
 
 import Vue from 'vue'
