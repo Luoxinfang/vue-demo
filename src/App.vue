@@ -6,7 +6,6 @@
     background: url(./assets/icon/index-1.png) no-repeat;
     background-size: contain;
   }
-
   .btn-drinking {
     margin: 1rem auto;
     display: block;
@@ -15,7 +14,6 @@
     background: url(./assets/icon/btn-1.png) no-repeat;
     background-size: contain;
   }
-
   .rule {
     position: absolute;
     z-index: 1000;
@@ -26,7 +24,6 @@
     background: url(./assets/icon/rule.jpg) no-repeat 0 0;
     background-size: 100%;
   }
-
   .btn-close {
     position: absolute;
     top: .1rem;
