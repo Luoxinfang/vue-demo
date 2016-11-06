@@ -104,6 +104,7 @@
     outline: none;
     font-size: .52rem;
     text-align: center;
+    border-radius: 0;
   }
   .ipt-wap::-webkit-input-placeholder {
     color: #000000;

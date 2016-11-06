@@ -4,10 +4,38 @@
 
 export default {
 
-  showMasker: function () {
+  showMasker() {
     document.querySelector('.masker').style.display = 'block';
   },
-  hideMasker: function () {
+  hideMasker() {
     document.querySelector('.masker').style.display = 'none';
+  },
+  //获取饮水量
+  getDrinkAmount: function (weight) {
+    let amount = 1800;
+    if (weight >= 50 && weight <= 75) {
+      amount = 2400;
+    } else if (weight > 75) {
+      amount = 3000;
+    }
+    return amount;
+  },
+  //获取饮水程序
+  getDrinkProgram: function (amount) {
+    let rule = [
+      ['7:00', 0.115],
+      ['9:30', 0.125],
+      ['13:00', 0.135],
+      ['14:00', 0.125],
+      ['15:30', 0.120],
+      ['17:30', 0.130],
+      ['20:00', 0.135],
+      ['21:30', 0.115]
+    ];
+    for (let i = 0; i < rule.length; i++) {
+      var item = rule[i];
+      item.push(item[1]*amount);
+    }
+    return rule;
   }
 }

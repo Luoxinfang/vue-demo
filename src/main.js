@@ -1,3 +1,5 @@
+"use strict";
+
 import './assets/css/swiper-3.4.0.min.css'
 import './assets/css/style.css'
 
@@ -6,10 +8,10 @@ import Router from 'vue-router'
 import Resource from 'vue-resource'
 
 import App from './App'
-import Index from './components/index.vue'
+import Index from './components/index'
 import Register from './components/reg'
 import Photo from './components/photo'
-
+import Main from './components/main'
 (function (doc) {
   function setHtmlFontSize() {
     var maxWidth = 640;
@@ -30,7 +32,8 @@ const router = new Router({
   routes:[
     {path: '/', component: Index},
     {path: '/reg', component: Register},
-    {path: '/photo', component: Photo}
+    {path: '/photo', component: Photo},
+    {path: '/main', component: Main}
   ]
 })
 

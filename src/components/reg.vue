@@ -105,13 +105,12 @@
     background: url(../assets/icon/rule.jpg) no-repeat 0 0;
     background-size: 100%;
   }
-
   .btn-close {
     position: absolute;
     top: .1rem;
     right: .1rem;
-    width: .6rem;
-    height: .6rem;
+    width: .8rem;
+    height: .8rem;
     display: inline-block;
   }
 </style>

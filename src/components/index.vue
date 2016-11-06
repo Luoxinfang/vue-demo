@@ -43,6 +43,7 @@
   </div>
 </template>
 <script>
+  "use strict";
   import Core from '../assets/js/core'
   export default {
     data () {
