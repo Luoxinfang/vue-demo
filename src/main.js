@@ -12,6 +12,7 @@ import Index from './components/index'
 import Register from './components/reg'
 import Photo from './components/photo'
 import Main from './components/main'
+import Result from './components/result'
 (function (doc) {
   function setHtmlFontSize() {
     var maxWidth = 640;
@@ -33,7 +34,8 @@ const router = new Router({
     {path: '/', component: Index},
     {path: '/reg', component: Register},
     {path: '/photo', component: Photo},
-    {path: '/main', component: Main}
+    {path: '/main', component: Main},
+    {path: '/result', component: Result}
   ]
 })
 

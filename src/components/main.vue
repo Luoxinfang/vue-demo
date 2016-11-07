@@ -31,7 +31,7 @@
     color: #00b7ee;
   }
   .form-list {
-    margin: .5rem 0 0 12%;
+    margin: .52rem 0 0 12%;
     width: 72%;
     height: 100px;
   }
