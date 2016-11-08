@@ -1,24 +1,28 @@
 <style scoped>
   .title {
-    margin: 1.2rem auto 0;
-    height: 1rem;
+    margin: 1rem 0 0 .6rem;
+    height: 1.6rem;
     text-align: center;
-    font-size: .75rem;
-    color: #ffffff;
-    -webkit-text-stroke: 2px #373561;
+  }
+  .title .process1 {
+    margin-top: .1rem;
+    width: 7rem;
+  }
+  .title .process2 {
+    width: 1.6rem;
   }
   .title span {
     color: transparent;
     font-size: 36px;
 
   }
-  .status{
-    margin: .7rem 20% 0;
+  .status {
+    margin: .2rem 20%;
     width: 60%;
   }
   .photo-wrapper {
     position: relative;
-    margin: .7rem auto 0;
+    margin: .6rem auto 0;
     width: 4.7rem;
     height: 4.7rem;
     border-radius: 50%;
@@ -37,7 +41,6 @@
     line-height: 4.7rem;
     color: #ffffff;
   }
-
   .swiper-container {
     width: 4.7rem;
     height: 4.71rem;
@@ -73,39 +76,35 @@
     background: url(../assets/icon/photo6.png) no-repeat center;
     background-size: 60%;
   }
-  .btn-next {
-    display: block;
-    width: 80%;
-    height: 1.2rem;
-    margin: 0 auto;
-    background: url(../assets/icon/btn-4.png) no-repeat;
-    background-size: contain;
-  }
-  .btn-disabled {
-    display: block;
-    width: 80%;
-    height: 1.2rem;
-    margin: 0 auto;
-    background: url(../assets/icon/btn-4-1.png) no-repeat;
-    background-size: contain;
-  }
-
-
-
-  .slogan{
+  .slogan {
     margin-top: 1rem;
     text-align: center;
     color: #ffffff;
+    font-size: 18px;
+    letter-spacing: 3px;
+    line-height: .75rem;
   }
   .fish {
     margin: .6rem 0;
     width: 100%;
   }
+  .btn-wrapper{
+    margin-top: .2rem;
+  }
+  .btn-1{
+    margin-left: 4%;
+    width: 44%;
+  }
+  .btn-2{
+    margin-left: 5%;
+    width: 44%;
+  }
 </style>
 <template>
   <div id="photo" class="page-i">
     <div class="title">
-      已完成今日小目标的<span>1/8</span>
+      <img class="process1 left" src="../assets/icon/8_0.png">
+      <img class="process2 left" src="../assets/icon/8_1.png">
     </div>
     <img class="status" src="../assets/icon/status-1.png">
     <div class="photo-wrapper">
@@ -121,7 +120,8 @@
 
     <img class="fish" src="../assets/icon/fish.png">
     <div class="btn-wrapper">
-      <a v-bind:class="[filled?'btn-next':'btn-disabled']" @click.stop="doReg"></a>
+      <img src="../assets/icon/btn-6.png" class="left btn-1">
+      <img src="../assets/icon/btn-7.png" class="left btn-2">
     </div>
   </div>
 </template>
