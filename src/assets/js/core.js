@@ -3,12 +3,18 @@
  */
 
 export default {
-
+  serverUrl: 'http://219.233.184.56',
   showMasker() {
     document.querySelector('.masker').style.display = 'block';
   },
   hideMasker() {
     document.querySelector('.masker').style.display = 'none';
+  },
+  getUrlParam(key){
+    var reg = new RegExp("(^|&)" + key + "=([^&]*)(&|$)", "i"),
+      r = window.location.search.substr(1).match(reg)
+    if (null != r) return r[2]
+    return null
   },
   //获取饮水量
   getDrinkAmount: function (weight) {
@@ -34,7 +40,7 @@ export default {
     ];
     for (let i = 0; i < rule.length; i++) {
       var item = rule[i];
-      item.push(item[1]*amount);
+      item.push(item[1] * amount);
     }
     return rule;
   }

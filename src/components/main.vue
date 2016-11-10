@@ -73,11 +73,11 @@
   .amount {
     padding: 0 .2rem;
   }
-  .fish{
+  .fish {
     width: 120%;
-    margin-left:-10%;
+    margin-left: -10%;
   }
-  .btn-drink{
+  .btn-drink {
     display: block;
     width: 66%;
     height: 1.2rem;
@@ -85,12 +85,12 @@
     background: url(../assets/icon/btn-5.png) no-repeat;
     background-size: contain;
   }
-  .warn{
+  .warn {
     width: 66%;
     height: 1.2rem;
     margin: 0 0 0 13%;
   }
-  .btn-warn{
+  .btn-warn {
     width: .4rem;
     height: .4rem;
     border: 1px solid #c1bdbd;
@@ -99,17 +99,17 @@
     background-color: #f9f9f9;
     outline: none;
     border-radius: 0;
-    margin-right:  .1rem;
+    margin-right: .1rem;
   }
-  .btn-warn:checked{
+  .btn-warn:checked {
     width: .5rem;
     height: .5rem;
     background: url(../assets/icon/s-3.png) no-repeat;
     background-size: contain;
     border: none;
-    margin-right:  0;
+    margin-right: 0;
   }
-  .warn-text{
+  .warn-text {
     font-size: 12px;
     color: #59493f;
     margin: .12rem 0 0 .1rem;
@@ -170,6 +170,18 @@
     created: function () {
       this['amount'] = Core.getDrinkAmount(100)
       this['drinkList'] = Core.getDrinkProgram(this['amount'])
+
+      this['$http'].get(Core.serverUrl + '/water_record?token=' + user.token,
+        {
+          dataType: 'text',
+          credentials: true
+        }
+      ).then(function (rs) {
+        console.log('ok', rs)
+      }, function () {
+        console.log('error')
+      })
+
     },
     data () {
       return {
@@ -184,12 +196,10 @@
         agreeWarn: false
       }
     },
-    computed: {
-
-    },
+    computed: {},
     watch: {
       agreeWarn: function (agreeWarn) {
-        if(agreeWarn){
+        if (agreeWarn) {
           this['showWarn'] = true
           Core.showMasker()
         }

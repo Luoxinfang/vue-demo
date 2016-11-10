@@ -6,7 +6,7 @@ import './assets/css/style.css'
 import Vue from 'vue'
 import Router from 'vue-router'
 import Resource from 'vue-resource'
-
+import Core from './assets/js/core'
 import App from './App'
 import Index from './components/index'
 import Register from './components/reg'
@@ -16,6 +16,15 @@ import Result from './components/result'
 import Knowledge from './components/knowledge'
 
 (function (doc) {
+  window.user = {};
+  user.token = Core.getUrlParam('token');
+  user.gender = Core.getUrlParam('gender');
+  if(user.token){
+    location.hash = '/main'
+  }else{
+    location.hash = '/'
+  }
+
   function setHtmlFontSize() {
     var maxWidth = 640;
     var clientWidth = doc.documentElement.clientWidth;
@@ -24,14 +33,14 @@ import Knowledge from './components/knowledge'
       doc.documentElement.style.fontSize = 1 * (clientWidth / 10) + 'px';
     }
   }
-  doc.addEventListener('DOMContentLoaded', setHtmlFontSize.bind(this), false);
+  doc.addEventListener('DOMContentLoaded', setHtmlFontSize.bind(this), false)
 })(document);
 Vue.use(Router);
 Vue.use(Resource);
 
 
 const router = new Router({
-  mode: 'history',
+  mode: 'hash',
   routes:[
     {path: '/', component: Index},
     {path: '/reg', component: Register},
@@ -41,8 +50,6 @@ const router = new Router({
     {path: '/knowledge', component: Knowledge},
   ]
 })
-
-
 const app = new Vue({
   router: router,
   render: h => h(App)

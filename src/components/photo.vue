@@ -123,12 +123,12 @@
     <div class="photo-wrapper">
       <div class="swiper-container">
         <div class="swiper-wrapper">
-          <div class="swiper-slide ph1"></div>
-          <div class="swiper-slide ph2"></div>
-          <div class="swiper-slide ph3"></div>
-          <div class="swiper-slide ph4"></div>
-          <div class="swiper-slide ph5"></div>
-          <div class="swiper-slide ph6"></div>
+          <div data-id="1" class="swiper-slide ph1"></div>
+          <div data-id="2" class="swiper-slide ph2"></div>
+          <div data-id="3" class="swiper-slide ph3"></div>
+          <div data-id="4" class="swiper-slide ph4"></div>
+          <div data-id="5" class="swiper-slide ph5"></div>
+          <div data-id="6" class="swiper-slide ph6"></div>
         </div>
         <div class="photo-border">滑动选择形象</div>
         <div class="photo-masker"></div>
@@ -152,14 +152,10 @@
       setTimeout(function () {
         new Swiper('.swiper-container')
       }, 100)
-      console.log(1);
-      this.user = this.$parent.user
-      console.log(this.$parent);
     },
     data () {
       return {
-        nickname: '',
-        agreeRule: false
+        nickname: ''
       }
     },
     computed: {
@@ -167,22 +163,23 @@
         return this['nickname']
       }
     },
-    watch: {
-      agreeRule: function (agreeRule) {
-        this['$http'].post('/someUrl', {
-          agreeRule: agreeRule
-        }).then(function () {
-          console.log('ok')
-        }, function () {
-          console.log('error')
-        })
-      }
-    },
     methods: {
       doReg() {
+        var photoId = document.querySelector('.swiper-slide-active').getAttribute('data-id')
         if (this['filled']) {
-          this['$parent'].user = this['user']
-          this['$router'].push({path: 'photo'})
+          this['$http'].post(Core.serverUrl + '/water_record', {
+            photoImg: photoId,
+            height: user.height,
+            weight: user.weight,
+            agreeRule: user.agreeRule,
+            nickname: this['nickname']
+          }).then(function (rs) {
+            if(rs['Code'] == 200){
+              this['$router'].push({path: '/main'});
+            }
+          }, function () {
+            console.log('error')
+          })
         }
       }
     }
