@@ -16,15 +16,6 @@ import Result from './components/result'
 import Knowledge from './components/knowledge'
 
 (function (doc) {
-  window.user = {};
-  user.token = Core.getUrlParam('token');
-  user.gender = Core.getUrlParam('gender');
-  if(user.token){
-    location.hash = '/main'
-  }else{
-    location.hash = '/'
-  }
-
   function setHtmlFontSize() {
     var maxWidth = 640;
     var clientWidth = doc.documentElement.clientWidth;
@@ -38,7 +29,8 @@ import Knowledge from './components/knowledge'
 Vue.use(Router);
 Vue.use(Resource);
 
-
+window.user = {};
+window.token = Core.getUrlParam('token');
 const router = new Router({
   mode: 'hash',
   routes:[

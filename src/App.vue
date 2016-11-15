@@ -38,3 +38,30 @@
     <router-view class="view"></router-view>
   </div>
 </template>
+<script>
+  import Core from 'assets/js/core'
+  export default {
+    created(){
+
+      this['$http'].get(Core.serverUrl + '/water_record', {
+        params: {
+          token: token
+        }
+      }).then(function (rs) {
+        var data = rs.body
+        if (data['Code'] == 200) {
+          window.user = data['data']
+          if (window.user.name) {
+            location.hash = '/main'
+          } else {
+            location.hash = '/'
+          }
+        } else {
+          console.log('error: Code 200')
+        }
+      }, function (err) {
+        console.log('error:', err)
+      })
+    }
+  }
+</script>

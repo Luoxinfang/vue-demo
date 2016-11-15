@@ -172,7 +172,7 @@
           this['$router'].push({path: 'photo'});
         }
         user.height = this['user'].height
-        user.weight = this['weight'].weight
+        user.weight = this['user'].weight
         user.agreeRule = this['agreeRule']
       },
       openRule(){

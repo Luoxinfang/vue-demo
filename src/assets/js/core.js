@@ -3,7 +3,8 @@
  */
 
 export default {
-  serverUrl: 'http://219.233.184.56',
+  serverUrl: 'http://127.0.0.1:3000',
+  //serverUrl: 'http://219.233.184.56',
   showMasker() {
     document.querySelector('.masker').style.display = 'block';
   },
@@ -40,7 +41,7 @@ export default {
     ];
     for (let i = 0; i < rule.length; i++) {
       var item = rule[i];
-      item.push(item[1] * amount);
+      item.push(parseInt(item[1] * amount));
     }
     return rule;
   }

@@ -136,7 +136,7 @@
     </div>
     <img class="title2" src="../assets/icon/title2.png">
     <input class="ipt-wap" maxlength="7" type="text" placeholder="(输入角色名称)"
-           v-model="nickname">
+           v-model="name">
     <img class="fish" src="../assets/icon/fish.png">
     <div class="btn-wrapper">
       <a v-bind:class="[filled?'btn-next':'btn-disabled']" @click.stop="doReg"></a>
@@ -155,30 +155,39 @@
     },
     data () {
       return {
-        nickname: ''
+        name: ''
       }
     },
     computed: {
       filled: function () {
-        return this['nickname']
+        return this['name']
       }
     },
     methods: {
       doReg() {
         var photoId = document.querySelector('.swiper-slide-active').getAttribute('data-id')
         if (this['filled']) {
-          this['$http'].post(Core.serverUrl + '/water_record', {
+          var _user = {
             photoImg: photoId,
+            token: window.token,
             height: user.height,
             weight: user.weight,
             agreeRule: user.agreeRule,
-            nickname: this['nickname']
+            name: this['name']
+          };
+          window.user = _user
+          this['$http'].get(Core.serverUrl + '/water_updata', {
+            params: _user
           }).then(function (rs) {
-            if(rs['Code'] == 200){
+            var data = rs.body
+            if (data['Code'] == 200) {
+              window.user = data['data']
               this['$router'].push({path: '/main'});
+            } else {
+              console.log('error: Code 200')
             }
-          }, function () {
-            console.log('error')
+          }, function (err) {
+            console.log('error:',err)
           })
         }
       }

@@ -45,8 +45,14 @@
     clear: both;
     color: #d1c0a5;
   }
-  .ok .pt-1 {
+  .pt-1.good {
     color: #59493f;
+  }
+  .pt-1.waiter {
+    color: #d1c0a5;
+  }
+  .pt-1.missed {
+    color: #f14b4b;
   }
   .pt-2 {
     margin: .08rem 6px;
@@ -58,6 +64,14 @@
     background-color: #f9f9f9;
     outline: none;
     border-radius: 0;
+
+  }
+  .pt-2.missed {
+    border: none;
+    width: .4rem;
+    height: .4rem;
+    background: url(../assets/icon/s-1.png);
+    background-size: contain;
   }
   .pt-2:checked {
     margin: .08rem 2px;
@@ -143,11 +157,13 @@
       </div>
       <div class="form-list">
         <div v-for="item of drinkList" class="g-w">
-          <div v-bind:class="['pt-1','inline',item.ok?'ok':'']">
+          <div v-bind:class="['pt-1','inline',item[4]]">
             <span class="time">{{item[0]}}</span>
             <span class="amount right">喝水{{item[2]}}ML</span>
           </div>
-          <input v-model="item.checked" type="checkbox" class="pt-2 inline right">
+          <input v-model="item[3]" type="checkbox"
+                 v-bind:class="['pt-2','inline','right',item[4]]"
+                 disabled>
         </div>
       </div>
       <img class="fish" src="../assets/icon/fish.png">
@@ -155,8 +171,9 @@
         <a class="btn-drink" @click.stop="drinking"></a>
       </div>
       <div class="warn">
-        <input v-model="agreeWarn" class="btn-warn inline left" type="checkbox">
-        <span class="warn-text left">勾这里每天9:00am提醒您健康喝水</span>
+        <input id="btn-agree-warn" v-model="agreeWarn" class="btn-warn inline left"
+               type="checkbox">
+        <label for="btn-agree-warn" class="warn-text left">勾这里每天9:00am提醒您健康喝水</label>
       </div>
     </div>
     <div class="warn-dialog" v-show="showWarn">
@@ -168,53 +185,92 @@
   import Core from '../assets/js/core'
   export default {
     created: function () {
-      this['amount'] = Core.getDrinkAmount(100)
+      this['amount'] = Core.getDrinkAmount(+window.user.weight)
       this['drinkList'] = Core.getDrinkProgram(this['amount'])
 
-      this['$http'].get(Core.serverUrl + '/water_record?token=' + user.token,
-        {
-          dataType: 'text',
-          credentials: true
+      this['$http'].get(Core.serverUrl + '/water_record', {
+        params: {
+          token: window.token
         }
-      ).then(function (rs) {
-        console.log('ok', rs)
-      }, function () {
-        console.log('error')
-      })
+      }).then(function (rs) {
+        var body = rs.body;
+        var date = new Date()
+        var hour = date.getHours()
+        var minutes = date.getMinutes()
+        var time = parseFloat(hour + '.' + ( minutes > 9 ? minutes : '0' + minutes))
+        for (var i = 0; i < this['drinkList'].length; i++) {
+          var item = this['drinkList'][i]
+          var obj = body.data['schedule'][0];
+          var hadDrink = obj[item[0]];
+          var itemTime = 0;
 
+          item.push(hadDrink)
+          if (i == 7) {
+            itemTime = 23.59
+          } else {
+            itemTime = parseFloat(this['drinkList'][i + 1][0].replace(':', '.'))
+          }
+          if (!hadDrink) {
+            if (time > itemTime) {
+              item.push('missed')
+            } else {
+              item.push('waiter')
+            }
+          } else {
+            item.push('good')
+          }
+        }
+        window.drinkList = this.drinkList;
+      }, function (err) {
+        console.log('error', err);
+      })
     },
     data () {
       return {
-        user: {
-          gender: 0,
-          height: '',
-          weight: ''
-        },
+        isReadOnly: true,
+        user: {},
         amount: 0,
         drinkList: [],
         showWarn: false,
         agreeWarn: false
       }
     },
-    computed: {},
     watch: {
       agreeWarn: function (agreeWarn) {
-        if (agreeWarn) {
-          this['showWarn'] = true
+        if (agreeWarn && !this['user']['onceAgreeWarn']) {
           Core.showMasker()
+          this['showWarn'] = true
         }
-        this['$http'].post('/someUrl', {
-          agreeWarn: agreeWarn
-        }).then(function () {
-
-        }, function () {
-          console.log('error')
+        this['$http'].get(Core.serverUrl + '/water_updata', {
+          params: {
+            token: window.token,
+            agreeWarn: agreeWarn
+          }
+        }).then(function (rs) {
+          console.log('good', rs.body)
+        }, function (err) {
+          console.log('error', err)
         })
       }
     },
     methods: {
       drinking() {
-
+        //time  可以根据this['drinkList']来吸附
+        this['$http'].get(Core.serverUrl + '/water_updata', {
+          params: {
+            time: +new Date(),
+            token: window.token
+          }
+        }).then(function (rs) {
+          var body = rs.body
+          if (body['Code'] == 200) {
+            this['$router'].push({path: 'result'});
+          } else {
+            console.log('good', rs.body)
+          }
+        }, function (err) {
+          console.log('error', err)
+        })
       },
       closeWarn(){
         this.showWarn = false
