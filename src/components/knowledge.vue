@@ -38,7 +38,7 @@
     <a class="btn-close" @click.stop="close"></a>
     <img class="title" src="../assets/icon/title5.png">
     <div class="photo-wrapper">
-      <div class="content">{{ content }}</div>
+      <div class="content" v-html="content"></div>
     </div>
   </div>
 </template>
@@ -51,9 +51,12 @@
           token: window.token
         }
       }).then(function (rs) {
-        var body = rs.body
-        this.title = body['mainTitle']
-        this.content = body['mainText']
+        var data = rs.body
+        if(typeof data == 'string') {
+          data = JSON.parse(data)
+        }
+        this.title = data['mainTitle']
+        this.content = data['mainText']
       }, function (err) {
         console.log('error', err)
       })
@@ -61,7 +64,7 @@
     data (){
       return {
         title: '饮水小知识',
-        content: '暂无内容'
+        content: `<p>暂无内容</p>`
       }
     },
     methods: {

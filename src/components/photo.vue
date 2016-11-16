@@ -146,10 +146,9 @@
 <script>
   import '../assets/js/swiper-3.4.0.min'
   import Core from '../assets/js/core'
-
   export default {
     created(){
-      setTimeout(function () {
+      setTimeout(function() {
         new Swiper('.swiper-container')
       }, 100)
     },
@@ -159,14 +158,14 @@
       }
     },
     computed: {
-      filled: function () {
+      filled: function() {
         return this['name']
       }
     },
     methods: {
       doReg() {
         var photoId = document.querySelector('.swiper-slide-active').getAttribute('data-id')
-        if (this['filled']) {
+        if(this['filled']) {
           var _user = {
             photoImg: photoId,
             token: window.token,
@@ -178,16 +177,21 @@
           window.user = _user
           this['$http'].get(Core.serverUrl + '/water_updata', {
             params: _user
-          }).then(function (rs) {
+          }).then(function(rs) {
             var data = rs.body
-            if (data['Code'] == 200) {
+            if (typeof data == 'string'){
+              data = JSON.parse(data)
+            }
+            console.log(data, '--', data['Code'], typeof data);
+            console.log(data, '1-', data['Code'], data.Code);
+            if(data['Code'] == 200) {
               window.user = data['data']
               this['$router'].push({path: '/main'});
             } else {
               console.log('error: Code 200')
             }
-          }, function (err) {
-            console.log('error:',err)
+          }, function(err) {
+            console.log('error:', err)
           })
         }
       }

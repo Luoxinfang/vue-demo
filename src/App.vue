@@ -42,14 +42,16 @@
   import Core from 'assets/js/core'
   export default {
     created(){
-
       this['$http'].get(Core.serverUrl + '/water_record', {
         params: {
           token: token
         }
       }).then(function (rs) {
         var data = rs.body
-        if (data['Code'] == 200) {
+        if (typeof data == 'string'){
+          data = JSON.parse(data)
+        }
+        if (data.Code == 200) {
           window.user = data['data']
           if (window.user.name) {
             location.hash = '/main'

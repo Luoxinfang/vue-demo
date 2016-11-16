@@ -3,7 +3,7 @@
  */
 
 export default {
-  serverUrl: 'http://127.0.0.1:3000',
+  serverUrl: 'http://127.0.0.1:8080',
   //serverUrl: 'http://219.233.184.56',
   showMasker() {
     document.querySelector('.masker').style.display = 'block';

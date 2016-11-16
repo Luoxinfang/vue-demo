@@ -184,34 +184,35 @@
 <script>
   import Core from '../assets/js/core'
   export default {
-    created: function () {
+    created: function() {
       this['amount'] = Core.getDrinkAmount(+window.user.weight)
       this['drinkList'] = Core.getDrinkProgram(this['amount'])
-
       this['$http'].get(Core.serverUrl + '/water_record', {
         params: {
           token: window.token
         }
-      }).then(function (rs) {
-        var body = rs.body;
+      }).then(function(rs) {
+        var data = rs.body;
+        if(typeof data == 'string') {
+          data = JSON.parse(data)
+        }
         var date = new Date()
         var hour = date.getHours()
         var minutes = date.getMinutes()
         var time = parseFloat(hour + '.' + ( minutes > 9 ? minutes : '0' + minutes))
-        for (var i = 0; i < this['drinkList'].length; i++) {
+        for(var i = 0; i < this['drinkList'].length; i++) {
           var item = this['drinkList'][i]
-          var obj = body.data['schedule'][0];
+          var obj = data.data['schedule'][0];
           var hadDrink = obj[item[0]];
           var itemTime = 0;
-
           item.push(hadDrink)
-          if (i == 7) {
+          if(i == 7) {
             itemTime = 23.59
           } else {
             itemTime = parseFloat(this['drinkList'][i + 1][0].replace(':', '.'))
           }
-          if (!hadDrink) {
-            if (time > itemTime) {
+          if(!hadDrink) {
+            if(time > itemTime) {
               item.push('missed')
             } else {
               item.push('waiter')
@@ -221,7 +222,7 @@
           }
         }
         window.drinkList = this.drinkList;
-      }, function (err) {
+      }, function(err) {
         console.log('error', err);
       })
     },
@@ -236,8 +237,8 @@
       }
     },
     watch: {
-      agreeWarn: function (agreeWarn) {
-        if (agreeWarn && !this['user']['onceAgreeWarn']) {
+      agreeWarn: function(agreeWarn) {
+        if(agreeWarn && !this['user']['onceAgreeWarn']) {
           Core.showMasker()
           this['showWarn'] = true
         }
@@ -246,9 +247,9 @@
             token: window.token,
             agreeWarn: agreeWarn
           }
-        }).then(function (rs) {
+        }).then(function(rs) {
           console.log('good', rs.body)
-        }, function (err) {
+        }, function(err) {
           console.log('error', err)
         })
       }
@@ -258,17 +259,21 @@
         //time  可以根据this['drinkList']来吸附
         this['$http'].get(Core.serverUrl + '/water_updata', {
           params: {
+            waterFlag: true,
             time: +new Date(),
             token: window.token
           }
-        }).then(function (rs) {
-          var body = rs.body
-          if (body['Code'] == 200) {
+        }).then(function(rs) {
+          var data = rs.body
+          if (typeof data == 'string'){
+            data = JSON.parse(data)
+          }
+          if(data['Code'] == 200) {
             this['$router'].push({path: 'result'});
           } else {
             console.log('good', rs.body)
           }
-        }, function (err) {
+        }, function(err) {
           console.log('error', err)
         })
       },
