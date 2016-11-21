@@ -57,12 +57,25 @@
         }
         this.title = data['mainTitle']
         this.content = data['mainText']
+        this.articleId = data['articleId']
       }, function (err) {
         console.log('error', err)
       })
+      this['$http'].get(Core.serverUrl + '/mobctsavesportinfoviews', {
+        params: {
+          token: window.token,
+          sportID: this.articleId
+        }
+      }).then(function (rs) {
+        console.log(rs.body);
+      }, function (err) {
+        console.log('error', err)
+      })
+
     },
     data (){
       return {
+        articleId: 0,
         title: '饮水小知识',
         content: `<p>暂无内容</p>`
       }

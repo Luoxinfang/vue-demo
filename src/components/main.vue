@@ -99,8 +99,12 @@
     background: url(../assets/icon/btn-5.png) no-repeat;
     background-size: contain;
   }
+  .btn-drink.disabled {
+    background: url(../assets/icon/btn-5-1.png) no-repeat;
+    background-size: contain;
+  }
   .warn {
-    width: 66%;
+    width: 70%;
     height: 1.2rem;
     margin: 0 0 0 13%;
   }
@@ -168,7 +172,7 @@
       </div>
       <img class="fish" src="../assets/icon/fish.png">
       <div class="btn-wrapper">
-        <a class="btn-drink" @click.stop="drinking"></a>
+        <a :class="['btn-drink',canDrink?'':'disabled']" @click.stop="drinking"></a>
       </div>
       <div class="warn">
         <input id="btn-agree-warn" v-model="agreeWarn" class="btn-warn inline left"
@@ -184,45 +188,48 @@
 <script>
   import Core from '../assets/js/core'
   export default {
-    created: function() {
+    created: function () {
       this['amount'] = Core.getDrinkAmount(+window.user.weight)
       this['drinkList'] = Core.getDrinkProgram(this['amount'])
       this['$http'].get(Core.serverUrl + '/water_record', {
         params: {
           token: window.token
         }
-      }).then(function(rs) {
-        var data = rs.body;
-        if(typeof data == 'string') {
+      }).then(function (rs) {
+        var data = rs.body
+        var time = Core.getTime()
+        if (typeof data == 'string') {
           data = JSON.parse(data)
         }
-        var date = new Date()
-        var hour = date.getHours()
-        var minutes = date.getMinutes()
-        var time = parseFloat(hour + '.' + ( minutes > 9 ? minutes : '0' + minutes))
-        for(var i = 0; i < this['drinkList'].length; i++) {
+
+        var waiterNum = 0
+        var missedNum = 0
+        for (var i = 0; i < this['drinkList'].length; i++) {
+
           var item = this['drinkList'][i]
-          var obj = data.data['schedule'][0];
-          var hadDrink = obj[item[0]];
-          var itemTime = 0;
+          var obj = data.data['schedule'][0]
+          var hadDrink = obj[item[0]]
+          var itemTime = 0
           item.push(hadDrink)
-          if(i == 7) {
-            itemTime = 23.59
-          } else {
-            itemTime = parseFloat(this['drinkList'][i + 1][0].replace(':', '.'))
-          }
-          if(!hadDrink) {
-            if(time > itemTime) {
+          itemTime = Core.parseToTime(this['drinkList'][i][0])
+          if (!hadDrink) {
+            var timeSpace = Core.getTimeSpace(time, itemTime)
+            if (time > itemTime && Math.abs(timeSpace) > 30) {
               item.push('missed')
+              missedNum++
             } else {
               item.push('waiter')
+              waiterNum++
             }
           } else {
             item.push('good')
           }
         }
+        if (waiterNum == 0 || missedNum == 8) {
+          this.canDrink = false
+        }
         window.drinkList = this.drinkList;
-      }, function(err) {
+      }, function (err) {
         console.log('error', err);
       })
     },
@@ -233,12 +240,13 @@
         amount: 0,
         drinkList: [],
         showWarn: false,
-        agreeWarn: false
+        agreeWarn: false,
+        canDrink: true
       }
     },
     watch: {
-      agreeWarn: function(agreeWarn) {
-        if(agreeWarn && !this['user']['onceAgreeWarn']) {
+      agreeWarn: function (agreeWarn) {
+        if (agreeWarn && !this['user']['onceAgreeWarn']) {
           Core.showMasker()
           this['showWarn'] = true
         }
@@ -247,35 +255,54 @@
             token: window.token,
             agreeWarn: agreeWarn
           }
-        }).then(function(rs) {
+        }).then(function (rs) {
           console.log('good', rs.body)
-        }, function(err) {
+        }, function (err) {
           console.log('error', err)
         })
       }
     },
     methods: {
       drinking() {
-        //time  可以根据this['drinkList']来吸附
-        this['$http'].get(Core.serverUrl + '/water_updata', {
-          params: {
-            waterFlag: true,
-            time: +new Date(),
-            token: window.token
+        if (this['canDrink']) {
+          //time  可以根据this['drinkList']来吸附
+          var amount = 0
+          var targetTime = ''
+          var time = Core.getTime()
+          for (var i = 0; i < this['drinkList'].length; i++) {
+            var item = this['drinkList'][i];
+            if (item[4] == 'waiter') {
+              targetTime = item[0]
+              amount = item[2]
+              break
+            }
           }
-        }).then(function(rs) {
-          var data = rs.body
-          if (typeof data == 'string'){
-            data = JSON.parse(data)
-          }
-          if(data['Code'] == 200) {
-            this['$router'].push({path: 'result'});
+          var timeSpace = Math.abs(Core.getTimeSpace(time, Core.parseToTime(targetTime)))
+          if (timeSpace > 30) {
+            alert('现在不是喝水的时间~');
           } else {
-            console.log('good', rs.body)
+            this['$http'].get(Core.serverUrl + '/water_updata', {
+              params: {
+                time: targetTime,
+                amount: amount,
+                waterFlag: true,
+                token: window.token
+              }
+            }).then(function (rs) {
+              var data = rs.body
+              if (typeof data == 'string') {
+                data = JSON.parse(data)
+              }
+              if (data['Code'] == 200) {
+                this['$router'].push({path: 'result'});
+              } else {
+                console.log('good', rs.body)
+              }
+            }, function (err) {
+              console.log('error', err)
+            })
           }
-        }, function(err) {
-          console.log('error', err)
-        })
+        }
       },
       closeWarn(){
         this.showWarn = false

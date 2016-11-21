@@ -11,6 +11,27 @@ export default {
   hideMasker() {
     document.querySelector('.masker').style.display = 'none';
   },
+  //获取时间
+  getTime(){
+    var now = new Date()
+    var hour = now.getHours()
+    var minutes = now.getMinutes()
+    var time = parseFloat(hour + '.' + ( minutes > 9 ? minutes : '0' + minutes))
+    return time
+  },
+  //强制转换位为
+  parseToTime (timeStr) {
+    return parseFloat(timeStr.replace(':', '.')).toFixed(2)
+  },
+  getTimeSpace(a, b){
+    var space = 0
+    var _a = ('2016/11/11 ' + a).replace('.', ':')
+    var _b = ('2016/11/11 ' + b).replace('.', ':')
+    var aDate = +new Date(_a)
+    var bDate = +new Date(_b)
+    space = parseInt((aDate - bDate) / 1000 / 60)
+    return space
+  },
   getUrlParam(key){
     var reg = new RegExp("(^|&)" + key + "=([^&]*)(&|$)", "i"),
       r = window.location.search.substr(1).match(reg)
