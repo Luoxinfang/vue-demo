@@ -1,7 +1,7 @@
 <style scoped>
   .title {
-    margin: 1rem 10% 0;
-    width: 80%;
+    margin: .5rem 15% 0;
+    width: 70%;
   }
   .float-layer {
     position: relative;
@@ -14,20 +14,21 @@
   }
   .g-w {
     clear: both;
+    font-size: .45rem;
     margin-top: .15rem;
   }
   .inline {
     display: inline-block;
   }
   .title-1 {
-    margin: .8rem 0 0 1.2rem;
-    font-size: 28px;
+    margin: .7rem 0 0 .85rem;
+    font-size: .75rem;
   }
   .title-2 {
     position: relative;
     top: .2rem;
     left: .6rem;
-    font-size: 18px;
+    font-size: .45rem;
     color: #00b7ee;
   }
   .form-list {
@@ -82,7 +83,7 @@
     border: none;
   }
   .time {
-    padding: 0 .2rem;
+    padding: 0 .1rem;
   }
   .amount {
     padding: 0 .2rem;
@@ -279,7 +280,10 @@
           }
           var timeSpace = Math.abs(Core.getTimeSpace(time, Core.parseToTime(targetTime)))
           if (timeSpace > 30) {
-            alert('现在不是喝水的时间~');
+            Core.showDialog('现在不是喝水的时间');
+            setTimeout(function () {
+              Core.hideDialog()
+            },2500)
           } else {
             this['$http'].get(Core.serverUrl + '/water_updata', {
               params: {

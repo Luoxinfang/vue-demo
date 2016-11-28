@@ -1,6 +1,6 @@
 <style scoped>
   .title {
-    margin: 20% auto 0;
+    margin: .8rem auto 0;
     width: 70%;
     height: 1rem;
     background: url(../assets/icon/title1.png) no-repeat;
@@ -8,7 +8,7 @@
   }
   .photo-wrapper {
     position: relative;
-    margin: 12% auto 0;
+    margin: .65rem auto 0;
     width: 4.7rem;
     height: 4.7rem;
     border-radius: 50%;
@@ -90,7 +90,7 @@
     background-size: contain;
   }
   .title2 {
-    margin: 1.2rem 20% 0;
+    margin: .65rem 20% 0;
     width: 60%;
   }
   .ipt-wap {
@@ -98,7 +98,7 @@
     width: 3.6rem;
     height: .6rem;
     line-height: .6rem;
-    margin: 1rem 3.2rem 0;
+    margin: .85rem 3.2rem 0;
     background: none;
     border-bottom: 1px solid #000000;
     outline: none;
@@ -113,7 +113,7 @@
     font-size: .52rem;
   }
   .fish {
-    margin: 1.2rem 0;
+    margin: .6rem 0;
     width: 100%;
   }
 </style>

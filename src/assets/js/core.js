@@ -6,10 +6,20 @@ export default {
   serverUrl: 'http://127.0.0.1:8080',
   //serverUrl: 'http://219.233.184.56',
   showMasker() {
-    document.querySelector('.masker').style.display = 'block';
+    document.querySelector('.masker').style.display = 'block'
   },
   hideMasker() {
-    document.querySelector('.masker').style.display = 'none';
+    document.querySelector('.masker').style.display = 'none'
+  },
+  showDialog(content) {
+    var $dom = document.querySelector('.dialog')
+    this.showMasker()
+    $dom.innerHTML = content
+    $dom.style.display = 'block'
+  },
+  hideDialog() {
+    this.hideMasker()
+    document.querySelector('.dialog').style.display = 'none'
   },
   //获取时间
   getTime(){
